@@ -103,6 +103,7 @@ public class flesch
 
   static boolean isVowel(char i)
   {
+    i=Character.toLowerCase(i);
     Set<Character> vowels = new HashSet<>();
     vowels.add('a');
     vowels.add('e');
@@ -163,6 +164,7 @@ public class flesch
   
   static boolean isDifficultWord(HashSet<String> dalechall, String word)
   {
+    word=word.toLowerCase();
     return(!dalechall.contains(word));
     
   }

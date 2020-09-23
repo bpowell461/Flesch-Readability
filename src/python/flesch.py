@@ -68,21 +68,22 @@ def countSyllables(word):
                                 
     if(state=='v'):             #If the previous state of the machine was a vowel
       
-      if(not isVowel(i)):       #and if the current state of the machine is not a vowel, increment. This accounts for consecutive vowels.
+      if(not isVowel(i)):   #and if the current state of the machine is not a vowel, increment. This accounts for consecutive vowels.
         hasSyllable=True
         count+=1
           
     state='v' if isVowel(i) else 'c' #Switching states depending on current character
       
-  if((state == 'v' and end!='e' and hasSyllable)):               #Special case for when the word ends in 'e'                         
+  if((state == 'v' and end!='e' and hasSyllable)):           #Special case for when the word ends in 'e'                         
     count+=1;
-  elif(state=='v' and (not hasSyllable)):                        #Special case for when the word ends in 'e' but has no other syllables
+  elif(state=='v' and (not hasSyllable)):             #Special case for when the word ends in 'e' but has no other syllables
     count+=1;
   return count;
 ####################################
 
 #################################### 
 def isVowel(i):
+  i=i.lower()
   vowels=set(['a','e','i','o','u','y'])
   return (i in vowels)
 ####################################
@@ -97,7 +98,7 @@ def isSentence(i):
 def isWord(word):
   i=0
   
-  for i in word:                        #Iterates through word, if the word has at least one letter then it is considered a word. 
+  for i in word:                  #Iterates through word, if the word has at least one letter then it is considered a word. 
     if(i.isalpha()):
       return True
       
@@ -106,6 +107,7 @@ def isWord(word):
 
 #################################### 
 def isDifficultWord(dalechall, word):
+  word=word.lower()
   return(not(word in dalechall))        #Returning the negation of the value, i.e. a word is a difficult word if it is NOT in the Dale-Chall list
 #################################### 
 

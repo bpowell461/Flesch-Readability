@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_set>
 #include <iomanip>
+#include<bits/stdc++.h>
 
 using namespace std;
 struct flesch
@@ -136,6 +137,7 @@ int countSyllables(string word)
 
 bool isVowel(char i)
 {
+  i=tolower(i);
   set<char> vowels = {'a','e','i','o','u','y'};
   bool found = vowels.find(i)!=vowels.end();
   return (found);
@@ -168,6 +170,7 @@ void buildUnorderedSet(unordered_set<string>* dalechall)
 }
 bool isDifficultWord(unordered_set<string>* dalechall, string word)
 {
+  transform(word.begin(), word.end(), word.begin(), ::tolower);
   bool found = dalechall->find(word)!=dalechall->end();
   return(!found);
 }
