@@ -16,6 +16,8 @@ def main(argv):
   a = (index.syllableCount)/(index.wordCount)   #
   b = (index.wordCount)/(index.sentenceCount)   #Variables used for respective equations
   aD = (index.diffWordCount)/(index.wordCount)  #
+  print("Difficult Word: "+str(index.diffWordCount))
+  
   readIndex = 206.835-(a*84.6)-(b*1.015)        #Flesch-Readability Index Variable
   gradeIndex = (a*11.8)+(b*0.39)-15.59          #Flesch Grade Level Index
   dalePercent = (aD * 100)                      #Dale-Chall Percentage
@@ -113,9 +115,10 @@ def isDifficultWord(dalechall, word):
 
 ####################################   
 def buildHashSet():
-  dalechall = set();
+  dalechall = set()
   with open("/pub/pounds/CSC330/dalechall/wordlist1995.txt") as inFile:
     for line in inFile:
+      line=line.rstrip('\n')
       dalechall.add(line)
   return dalechall
 #################################### 
