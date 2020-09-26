@@ -23,6 +23,7 @@ bool isSentence(char i);
 bool isWord(string word);
 void buildUnorderedSet(unordered_set<string>* dalechall);
 bool isDifficultWord(unordered_set<string>* dalechall, string word);
+string checkWord(string word);
 
 int main(int argc, char* argv[])
 {
@@ -67,17 +68,17 @@ void countWords(char* args, flesch* index)
 	{
     if(isWord(word))  //Checks first letter of word to see if it is a number or word
     {
-    
-      if(isDifficultWord(dalechall, word))
-          index->diffWordCount++;
-          
-		  index->wordCount+=1;
-      index->syllableCount += countSyllables(word); 
       for(auto i: word)
       {
         if(isSentence(i))
           index->sentenceCount++;
       }
+      word = checkWord(word);
+      if(isDifficultWord(dalechall, word))
+          index->diffWordCount++;
+          
+		  index->wordCount+=1;
+      index->syllableCount += countSyllables(word); 
     }
 	}
   delete dalechall;
@@ -89,16 +90,9 @@ int countSyllables(string word)
   int count = 0;
   bool hasSyllable=false;              //boolean to check if word has syllables
   char state = 'c';
+  char end = word[(word.length()-1)];
   
-  string::iterator iter = word.end();  //End of string iterator converted to int position.
-  int end = iter-word.begin();   
 
-   //cout<<endl;
-   //cout<<"Word: "<<word<<endl;
-  if(isSentence(word[end-1]))
-  {
-    word.pop_back();
-  }
   for (auto i : word)                  //This is a state diagram inspired by a Stack Overflow Answer: 
   {
    //cout<<i<<endl;
@@ -122,7 +116,7 @@ int countSyllables(string word)
     }                                  //
     state = isVowel(i)?'v':'c';        //ternary operator, switching states depending on vowel or cosonant
   }
-  if((state == 'v' && word[end-1]!='e' && hasSyllable)) //Increases syllable count for words that have other syllables and
+  if((state == 'v' && end!='e' && hasSyllable)) //Increases syllable count for words that have other syllables and
   {                                                     //does not end in 'e'. Example: "bible","apple","trade"
     count++;
   }
@@ -173,4 +167,17 @@ bool isDifficultWord(unordered_set<string>* dalechall, string word)
   transform(word.begin(), word.end(), word.begin(), ::tolower);
   bool found = dalechall->find(word)!=dalechall->end();
   return(!found);
+}
+string checkWord(string word)
+{
+  if(word[0]=='[')
+  {
+    word = word.substr(1, word.length());
+  }
+  if(word[(word.length()-1)]==']' || word[(word.length()-1)]==',' || isSentence(word[(word.length()-1)]))
+  {
+    word = word.substr(0, word.length()-1);
+  }
+  return word;
+
 }

@@ -42,15 +42,16 @@ def countWords(args):                         #Probably should rename this to bu
   with open(sys.argv[1], 'r') as inFile:      #
     for line in inFile:                       #Reading in file and splitting based on white space
       for word in line.split():               #
-        if(isWord(word)):                     
-          if(isDifficultWord(dalechall,word)):          #
-            index.diffWordCount+=1                      #
-          index.wordCount+=1                            #
-          index.syllableCount+=countSyllables(word)     #
-          i=0                                           #
+        if(isWord(word)):
+          i=0
           for i in word:
             if(isSentence(i)):
               index.sentenceCount+=1
+          word = checkWord(word)                   
+          if(isDifficultWord(dalechall,word)):          #
+            index.diffWordCount+=1                      #
+          index.wordCount+=1                            #
+          index.syllableCount+=countSyllables(word)     #                                          #
   return index                                          #returning built Flesch Object
 ####################################       
 
@@ -61,10 +62,6 @@ def countSyllables(word):
   state = 'c'                    #Default state is 'c' for cosonant
  
   end = word[-1:]
-  
-  if(isSentence(end)):           #If the end of the word has a punctuation, slice it off
-  
-    word = word[:-1]
     
   for i in word:                #Simple state machine inspired by a Stack Overflow answer: https://stackoverflow.com/a/52649782
                                 
@@ -122,6 +119,12 @@ def buildHashSet():
       dalechall.add(line)
   return dalechall
 #################################### 
-
+def checkWord(word):
+  if(word[0]=='['):
+    word = word[1:]
+  if(word[-1]==']' or word[-1]==',' or isSentence(word[-1])):
+    word = word[:-1]
+  return word
+#################################### 
 if __name__=='__main__':
   main(sys.argv[1:])

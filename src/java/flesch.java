@@ -26,17 +26,18 @@ public class flesch
       String word = reader.next();
       if(isWord(word))  //Checks first letter of word to see if it is a number or word
       {
-      
-        if(isDifficultWord(dalechall, word))
-          index.diffWordCount++;
-        
-        index.wordCount++;
-        index.syllableCount += countSyllables(word); 
         for(char i: word.toCharArray())
         {
           if(isSentence(i))
             index.sentenceCount++;
         }
+        word = checkWord(word);
+        //System.out.println("Checked word: "+word);
+        if(isDifficultWord(dalechall, word))
+          index.diffWordCount++;
+        
+        index.wordCount++;
+        index.syllableCount += countSyllables(word);
       }
 	  }
 	  reader.close();
@@ -56,15 +57,7 @@ public class flesch
     int count = 0;
     boolean hasSyllable=false;              //boolean to check if word has syllables
     char state = 'c';
-  
-    char end = word.charAt(word.length()-1);
-
-   //cout<<endl;
-   //cout<<"Word: "<<word<<endl;
-    if(isSentence(end))
-    {
-      word = word.substring(0, word.length() - 1);
-    }
+    char end = word.charAt(word.length()-1); 
     for (char i : word.toCharArray())                  //This is a state diagram inspired by a Stack Overflow Answer: 
     {
      //cout<<i<<endl;
@@ -172,6 +165,19 @@ public class flesch
   {
     int scale = (int) Math.pow(10, precision);
     return (double) Math.round(value * scale) / scale;
+  }
+  static String checkWord(String word)
+  {
+  if(word.charAt(0)=='[')
+  {
+    word = word.substring(1, word.length());
+  }
+  if(word.charAt(word.length()-1)==']' || word.charAt(word.length()-1)==','  || isSentence(word.charAt(word.length()-1)))
+  {
+    word = word.substring(0, word.length()-1);
+  }
+  return word;
+
   }
   
   public static void main(String[] args)
