@@ -43,8 +43,8 @@ sub buildFleschObject {
                 }
               }
               $word = checkWord($word);
-              print "Word to be checked: $word\n"; #Word being passed into the parameter
-              if(isDifficultWord(@dalechall, $word)) #Bug occurs here
+              #print "Word to be checked: $word\n"; #Word being passed into the parameter
+              if(isDifficultWord(\@dalechall, $word)) #Bug occurs here
               {
                 $fleschIndex->{diffWordCount}++;
               }
@@ -123,13 +123,18 @@ sub isWord {
 
 sub isDifficultWord  #MAJOR BUG
 {
-  my @dalechall = $_[0];
+  my $dalechallRef= $_[0];
+  my @dalechall = @$dalechallRef;
+  #print(@dalechall);
   my $word = $_[1];
-  print("Checking for difficult word: $word\n"); #BUG OCCURS HERE ~ WORD GETS ASSIGNED ABLE
-  return(not(grep(/^$word$/, @dalechall))); #found this way to easily search
+  $word = lc($word);
+  #print("$word\n");
+  #print("Checking for difficult word: $word\n"); #BUG OCCURS HERE ~ WORD GETS ASSIGNED ABLE
+  #my %hashmap = map {$_ => 1 } @dalechall;
+   return(not(grep { $_ eq $word} @dalechall)); 
 }
 
-sub buildHashSet
+sub buildHashSet()
 {
   my @dalechall;
   my $filename = "/pub/pounds/CSC330/dalechall/wordlist1995.txt";
