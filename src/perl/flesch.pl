@@ -16,10 +16,9 @@ sub new {
 }
 
 sub buildFleschObject {
-## Grab the name of the file from the command line, exit if no name given
- my @dalechall = buildHashSet();
+ my @dalechall = buildHashSet(); #Building Hash Set
  #print "@dalechall"; 
- my $fleschIndex = new flesch(0,0,0,0);
+ my $fleschIndex = new flesch(0,0,0,0); #Flesch Object
  
  my $filename = $_[0] or die "Need to get file name on the  command line\n";
  
@@ -36,20 +35,23 @@ sub buildFleschObject {
          #print "$word\n";
             if(isWord($word))
             {
-              if(isDifficultWord(@dalechall, $word))
-              {
-                $fleschIndex->{diffWordCount}++;
-              }
-              #print "Word to be checked: $word\n";
-              $fleschIndex->{wordCount}++;
-              $fleschIndex->{syllableCount}+=countSyllables($word);
-              foreach my $char (split //, $word)
+              foreach my $char (split //, $word) #Splitting word into characters
               {
                 if(isSentence($char))
                 {
                   $fleschIndex->{sentenceCount}++;
                 }
               }
+              $word = checkWord($word);
+              print "Word to be checked: $word\n"; #Word being passed into the parameter
+              if(isDifficultWord(@dalechall, $word)) #Bug occurs here
+              {
+                $fleschIndex->{diffWordCount}++;
+              }
+              #print "Word to be checked: $word\n";
+              $fleschIndex->{wordCount}++;
+              $fleschIndex->{syllableCount}+=countSyllables($word);
+              
             }
        }
  }
@@ -59,35 +61,30 @@ sub buildFleschObject {
 
 sub countSyllables {
   my $count = 0;
-  my $hasSyllable = 0;
-  my $state = "c";
+  my $hasSyllable = 0; #boolean to check if word has syllables
+  my $state = "c"; #state of state machine
   
   my $word = $_[0];
-  my $end = substr($word, -1);
-  #print "$word";
-  #print "$end";
-  if(isSentence($end))
+  my $end = substr($word, -1); #end of word character
+                                
+                                #Simple state machine inspired by a Stack Overflow answer: https://stackoverflow.com/a/52649782
+  foreach my $char (split //, $word) #Splitting word into characters
   {
-    chomp $word;
-    $end = substr($word, -1);
-  }
-  foreach my $char (split //, $word)
-  {
-    if($state eq "v")
+    if($state eq "v") #Check the state of the machine for vowel 
     {
-      if(not(isVowel($char)))
+      if(not(isVowel($char)))  #Checks for 2 consecutive vowels
       {
         $hasSyllable = 1;
         $count++;
       }
     }
-    $state = isVowel($char)?"v":"c";
+    $state = isVowel($char)?"v":"c"; #Switching state of the machine
   }
-  if(($state eq "v") and (not ($end eq "e")) and ($hasSyllable))
+  if(($state eq "v") and (not ($end eq "e")) and ($hasSyllable))#Special case for when the word ends in 'e' but has no other syllables
   {
     $count++;
   }
-  elsif(($state eq "v") and (not($hasSyllable)))
+  elsif(($state eq "v") and (not($hasSyllable))) #Special case for when the word has no syllables
   {
     $count++;
   }
@@ -113,9 +110,9 @@ sub isSentence {
 sub isWord {
   my $word = $_[0];
   $word = lc($word);
-  foreach my $char (split //, $word)
+  foreach my $char (split //, $word) #Splitting word into characters
   {
-  if($char =~ /^[a-z]+$/i)
+  if($char =~ /^[a-z]+$/i) #Super cool regex checker for alphabet
   {
     return 1;
   } 
@@ -124,20 +121,12 @@ sub isWord {
   return 0;
 }
 
-sub isDifficultWord
+sub isDifficultWord  #MAJOR BUG
 {
   my @dalechall = $_[0];
-  my %hashmap = map {$_ => 1 } @dalechall;
   my $word = $_[1];
-  my $end = substr($word, -1);
-  print "Checking: $word\n";
-  #print "$end";
-  if((isSentence($end)) or ($end eq ","))
-  {
-    chomp $word;
-    $end = substr($word, -1);
-  }
-  return(not(exists($hashmap{$word})));
+  print("Checking for difficult word: $word\n"); #BUG OCCURS HERE ~ WORD GETS ASSIGNED ABLE
+  return(not(grep(/^$word$/, @dalechall))); #found this way to easily search
 }
 
 sub buildHashSet
@@ -155,6 +144,22 @@ sub buildHashSet
   }
   return @dalechall;
 }
+sub checkWord
+{
+  my $word = $_[0];
+  my $begin = substr($word, 0, 1);
+  my $end = substr($word, -1);
+  
+  if($begin eq "[") #trimming down words to "natural forms ie. [is] = is ; loved, = loved ; etc.
+  {
+    $word = substr($word, 1);
+  }
+  if($end eq "]" or $end eq "," or isSentence($end))
+  {
+    $word = substr($word, 0, -1);
+  }
+  return $word;
+}
 
   my $fleschIndex=buildFleschObject($ARGV[0]);
   my $a = ($fleschIndex->{syllableCount})/($fleschIndex->{wordCount});   #
@@ -171,6 +176,9 @@ sub buildHashSet
   {
     $daleIndex += 3.6365;
   }
+  $readIndex = sprintf("%.0f", $readIndex);
+  $gradeIndex = sprintf("%.1f", $gradeIndex); #Rounding the numbers
+  $daleIndex = sprintf("%.1f", $daleIndex);
   print "Sentence Count: $fleschIndex->{sentenceCount}\n";
   print "Word Count: $fleschIndex->{wordCount}\n";
   print("Syllable Count: $fleschIndex->{syllableCount}\n");
