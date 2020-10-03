@@ -97,28 +97,21 @@ public class flesch
   static boolean isVowel(char i)
   {
     i=Character.toLowerCase(i);
-    Set<Character> vowels = new HashSet<>();
-    vowels.add('a');
-    vowels.add('e');
-    vowels.add('i');
-    vowels.add('o');
-    vowels.add('u');
-    vowels.add('y');
-    boolean found = vowels.contains(i);
-    return (found);
+    if(i=='a'||i=='e'||i=='i'||i=='o'||i=='u'||i=='y')
+    {
+    return true;
+    }
+    return false;
   }
   
   
   static boolean isSentence(char i)
   {
-    Set<Character> punctuation = new HashSet<>();
-    punctuation.add('.');
-    punctuation.add(':');
-    punctuation.add(';');
-    punctuation.add('!');
-    punctuation.add('?');
-    boolean found = punctuation.contains(i);
-    return (found);
+    if(i=='.'||i==':'||i==';'||i=='!'||i=='?')
+    {
+    return true;
+    }
+    return false;
   }
   
   

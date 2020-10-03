@@ -83,14 +83,16 @@ def countSyllables(word):
 #################################### 
 def isVowel(i):
   i=i.lower()
-  vowels=set(['a','e','i','o','u','y'])
-  return (i in vowels)
+  if(i=='a'or i=='e' or i=='i' or i=='o' or i=='u' or i=='y'):
+    return True;
+  return False;
 ####################################
 
 #################################### 
 def isSentence(i):
-  punctuation=set(['.',':',';','!','?'])
-  return(i in punctuation)
+  if(i=='.' or i==':' or i==';' or i=='!' or i=='?'):
+    return True;
+  return False;
 ####################################
 
 #################################### 

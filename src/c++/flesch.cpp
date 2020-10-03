@@ -132,15 +132,19 @@ int countSyllables(string word)
 bool isVowel(char i)
 {
   i=tolower(i);
-  set<char> vowels = {'a','e','i','o','u','y'};
-  bool found = vowels.find(i)!=vowels.end();
-  return (found);
+  if(i=='a'||i=='e'||i=='i'||i=='o'||i=='u'||i=='y')
+  {
+    return true;
+  }
+  return false;
 }
 bool isSentence(char i)
 {
-  set<char> punctuation = {'.',':',';','?','!'};
-  bool found = punctuation.find(i)!=punctuation.end();
-  return (found);
+  if(i=='.'||i==':'||i==';'||i=='!'||i=='?')
+  {
+    return true;
+  }
+  return false;
 }
 bool isWord(string word)
 {
