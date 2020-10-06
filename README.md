@@ -16,3 +16,9 @@ Three unique scores will be generated using equations based on four attributes: 
 - All words contain at least one syllable.
 
 **_diffWordCount_** is determined by the amount of difficult words in each file. A word is considered difficult if it not an element of the official _1995 Dale-Chall Word List_. 
+
+#Compilation and Running
+
+##C++
+`c++ flesch.cpp
+a.out <filename>`
