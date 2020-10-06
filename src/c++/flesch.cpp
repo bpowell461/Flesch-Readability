@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
   cout<<"Sentence Count: "<<index->sentenceCount<<endl;
   cout<<"Word Count: "<<index->wordCount<<endl;
   cout<<"Syllable Count: "<<index->syllableCount<<endl;
+  cout<<"Difficult Word Count: "<<index->diffWordCount<<endl;
   
   double a = ((double)index->syllableCount)/((double)index->wordCount);
   double b = ((double)index->wordCount)/((double)index->sentenceCount);
